@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final JavaScript Exam – TOFAS | Eng. Ahmed Shawky</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #1a2235;
+    --border: #1e3a5f;
+    --accent: #00aaff;
+    --accent2: #0066cc;
+    --gold: #f0b429;
+    --green: #10d97a;
+    --red: #ff4d6d;
+    --text: #e8f0fe;
+    --muted: #7a90b0;
+    --radius: 14px;
+    --font-main: 'Cairo', sans-serif;
+    --font-code: 'Fira Code', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ====== HEADER ====== */
+  .site-header {
+    width: 100%;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px;
+  }
+  .logo-img {
+    height: 54px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px rgba(0,170,255,0.5);
+    flex-shrink: 0;
+    background: #fff;
+    padding: 3px;
+  }
+  .header-text h1 {
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1.2;
+    text-shadow: 0 0 20px rgba(0,170,255,0.5);
+  }
+  .header-text p {
+    font-size: 0.82rem;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ====== HERO BANNER (after nav) ====== */
+  .hero-banner-wrap {
+    width: 100%;
+    line-height: 0;
+  }
+  .hero-banner-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.93;
+  }
+
+
+
+  /* ====== MAIN CONTAINER ====== */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ====== STUDENT INFO FORM ====== */
+  .info-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+  }
+  .info-card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-card h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 20px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .form-group input, .form-group select {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,170,255,0.12);
+  }
+  .form-group select option { background: var(--surface); }
+  .field-error {
+    font-size: 0.75rem;
+    color: var(--red);
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* ====== EXAM SECTION ====== */
+  .exam-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .exam-title {
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 16px rgba(0,170,255,0.35);
+    letter-spacing: 0.01em;
+  }
+  .progress-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 180px;
+  }
+  .progress-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .progress-bar {
+    width: 180px;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 3px;
+    transition: width 0.3s;
+    width: 0%;
+  }
+
+  /* ====== QUESTION CARD ====== */
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 18px;
+    transition: border-color 0.2s;
+  }
+  .question-card.answered { border-color: rgba(0,170,255,0.35); }
+  .question-card.correct { border-color: rgba(16,217,122,0.5); }
+  .question-card.wrong { border-color: rgba(255,77,109,0.5); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    background: var(--accent2);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-text {
+    font-size: 0.97rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* ====== OPTIONS ====== */
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+  }
+  .option-label:hover {
+    border-color: var(--accent);
+    background: rgba(0,170,255,0.06);
+  }
+  .option-label input[type="radio"] { display: none; }
+  .option-bubble {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: all 0.18s;
+    margin-top: 1px;
+  }
+  .option-label:has(input:checked) .option-bubble {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .option-label:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(0,170,255,0.1);
+  }
+  .option-text {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text);
+    flex: 1;
+  }
+  pre.code-option {
+    font-family: var(--font-code);
+    font-variant-ligatures: none;
+    font-feature-settings: 'liga' 0, 'calt' 0;
+    font-size: 0.72rem;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    overflow-x: auto;
+    white-space: pre;
+    color: #a8d8ff;
+    line-height: 1.5;
+    margin-top: 4px;
+    border: 1px solid rgba(0,170,255,0.15);
+  }
+
+  /* ====== EXPECTED OUTPUT BLOCK ====== */
+  .expected-output {
+    font-family: var(--font-code);
+    font-size: 0.80rem;
+    background: rgba(0,0,0,0.45);
+    border-left: 3px solid var(--green);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0 0 16px 42px;
+    color: #b6f5d0;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  /* After submit: show result colors */
+  .option-label.correct-answer {
+    border-color: var(--green) !important;
+    background: rgba(16,217,122,0.08) !important;
+  }
+  .option-label.correct-answer .option-bubble {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .option-label.wrong-answer {
+    border-color: var(--red) !important;
+    background: rgba(255,77,109,0.08) !important;
+  }
+  .option-label.wrong-answer .option-bubble {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  /* ====== SUBMIT BUTTON ====== */
+  .submit-area {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .submit-btn {
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    color: #fff;
+    border: none;
+    padding: 16px 52px;
+    border-radius: 50px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-family: var(--font-main);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 24px rgba(0,170,255,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,170,255,0.5);
+  }
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .warning-msg {
+    color: var(--gold);
+    font-size: 0.85rem;
+    margin-top: 10px;
+    display: none;
+  }
+
+  /* ====== RESULTS PANEL ====== */
+  #results-panel {
+    display: none;
+    background: var(--card);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 32px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0,170,255,0.15);
+  }
+  .score-ring {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0deg, var(--border) 0deg);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    position: relative;
+    transition: background 1s;
+  }
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: var(--card);
+  }
+  .score-inner {
+    position: relative;
+    z-index: 1;
+  }
+  .score-num {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-denom {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .grade-badge {
+    display: inline-block;
+    font-size: 1.6rem;
+    font-weight: 900;
+    padding: 10px 32px;
+    border-radius: 50px;
+    margin: 14px 0;
+  }
+  .grade-A { background: rgba(16,217,122,0.15); color: var(--green); border: 2px solid var(--green); }
+  .grade-B { background: rgba(0,170,255,0.15); color: var(--accent); border: 2px solid var(--accent); }
+  .grade-C { background: rgba(240,180,41,0.15); color: var(--gold); border: 2px solid var(--gold); }
+  .grade-D { background: rgba(255,77,109,0.12); color: var(--red); border: 2px solid var(--red); }
+  .grade-F { background: rgba(255,77,109,0.2); color: var(--red); border: 2px solid var(--red); }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-num { font-size: 1.4rem; font-weight: 800; }
+  .stat-label { font-size: 0.75rem; color: var(--muted); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--red); }
+
+  .sheets-status {
+    margin-top: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .sheets-status.loading { background: rgba(0,170,255,0.1); color: var(--accent); border: 1px solid var(--accent); }
+  .sheets-status.success { background: rgba(16,217,122,0.1); color: var(--green); border: 1px solid var(--green); }
+  .sheets-status.error { background: rgba(255,77,109,0.1); color: var(--red); border: 1px solid var(--red); }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .question-card { padding: 14px 12px; }
+    .submit-btn { width: 100%; padding: 14px; }
+    pre.code-option { font-size: 0.62rem; }
+    .hero-banner-wrap img { width: 100%; height: auto; }
+    .logo-img { height: 42px; }
+    .header-inner { padding: 10px 14px; gap: 10px; }
+    .header-text h1 { font-size: 0.95rem; }
+    .exam-title { font-size: 1.2rem; }
+    .progress-wrap { min-width: unset; width: 100%; align-items: flex-start; }
+    .progress-bar { width: 100%; }
+    .exam-header { flex-direction: column; align-items: flex-start; }
+    .info-card { padding: 18px 14px; }
+    .container { padding: 16px 12px 60px; }
+    .q-text { font-size: 0.9rem; }
+  }
+  @media (max-width: 380px) {
+    .header-text h1 { font-size: 0.82rem; }
+    .header-text p { font-size: 0.72rem; }
+    .logo-img { height: 36px; }
+  }
+
+  /* ====== FOOTER ====== */
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+  footer span { color: var(--accent); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(0,170,255,0.3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <img class="logo-img" src="https://res.cloudinary.com/dd5j2lbom/image/upload/v1780012409/my_logo-01_disxaz.png" alt="Logo">
+    <div class="header-text">
+      <h1 id="site-title">Final JavaScript Exam – TOFAS</h1>
+      <p id="site-sub">Eng. Ahmed Shawky | ICT & Programming & AI</p>
+    </div>
+  </div>
+</header>
+
+
+
+<!-- HERO BANNER (after nav) -->
+<div class="hero-banner-wrap">
+  <img src="https://res.cloudinary.com/dd5j2lbom/image/upload/v1782687870/Youtube_thumbnail-03_bf0tik.png" alt="Final JavaScript Exam TOFAS">
+</div>
+
+<div class="container">
+
+  <!-- RESULTS PANEL -->
+  <div id="results-panel">
+    <div class="score-ring" id="score-ring">
+      <div class="score-inner">
+        <div class="score-num" id="score-num">0</div>
+        <div class="score-denom" id="score-denom">/ 25</div>
+      </div>
+    </div>
+    <div class="grade-badge" id="grade-badge">—</div>
+    <div class="result-stats">
+      <div class="stat-item">
+        <div class="stat-num green" id="correct-count">0</div>
+        <div class="stat-label" id="lbl-correct">Correct</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num red" id="wrong-count">0</div>
+        <div class="stat-label" id="lbl-wrong">Wrong</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" id="pct-count" style="color:var(--gold)">0%</div>
+        <div class="stat-label" id="lbl-pct">Score %</div>
+      </div>
+    </div>
+    <div class="sheets-status" id="sheets-status" style="display:none;"></div>
+  </div>
+
+  <!-- STUDENT INFO -->
+  <div class="info-card">
+    <h2 id="info-title">Student Information</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="f-name" placeholder="Your full name">
+        <span class="field-error" id="err-name">Required / مطلوب</span>
+      </div>
+      <div class="form-group">
+        <label>Age</label>
+        <input type="number" id="f-age" placeholder="Age" min="10" max="99">
+        <span class="field-error" id="err-age">Required / مطلوب</span>
+      </div>
+      <div class="form-group">
+        <label>Governorate</label>
+        <select id="f-gov">
+          <option value="">— Select / اختر —</option>
+          <option>Alexandria / الإسكندرية</option>
+          <option>Cairo / القاهرة</option>
+          <option>Giza / الجيزة</option>
+          <option>Dakahlia / الدقهلية</option>
+          <option>Gharbia / الغربية</option>
+          <option>Sharqia / الشرقية</option>
+          <option>Monufia / المنوفية</option>
+          <option>Qalyubia / القليوبية</option>
+          <option>Kafr el-Sheikh / كفر الشيخ</option>
+          <option>Beheira / البحيرة</option>
+          <option>Ismailia / الإسماعيلية</option>
+          <option>Port Said / بورسعيد</option>
+          <option>Suez / السويس</option>
+          <option>North Sinai / شمال سيناء</option>
+          <option>South Sinai / جنوب سيناء</option>
+          <option>Damietta / دمياط</option>
+          <option>Faiyum / الفيوم</option>
+          <option>Beni Suef / بني سويف</option>
+          <option>Minya / المنيا</option>
+          <option>Asyut / أسيوط</option>
+          <option>Sohag / سوهاج</option>
+          <option>Qena / قنا</option>
+          <option>Luxor / الأقصر</option>
+          <option>Aswan / أسوان</option>
+          <option>Red Sea / البحر الأحمر</option>
+          <option>Matruh / مطروح</option>
+          <option>New Valley / الوادي الجديد</option>
+        </select>
+        <span class="field-error" id="err-gov">Required / مطلوب</span>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="f-phone" placeholder="01xxxxxxxxx">
+        <span class="field-error" id="err-phone">Required / مطلوب</span>
+      </div>
+      <div class="form-group">
+        <label>Parent's Phone Number</label>
+        <input type="tel" id="f-parent" placeholder="01xxxxxxxxx">
+        <span class="field-error" id="err-parent">Required / مطلوب</span>
+      </div>
+      <div class="form-group">
+        <label>Exam Language</label>
+        <select id="f-lang">
+          <option value="">— Select / اختر —</option>
+          <option value="English">English</option>
+          
+        </select>
+        <span class="field-error" id="err-lang">Required / مطلوب</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXAM HEADER -->
+  <div class="exam-header">
+    <div class="exam-title" id="exam-title">📝 JavaScript Exam — 25 Questions</div>
+    <div class="progress-wrap">
+      <span class="progress-label" id="prog-label">Answered: 0 / 25</span>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="questions-container"></div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area">
+    <button class="submit-btn" id="submit-btn" onclick="submitExam()">
+      <span id="submit-text">Submit Exam ✓</span>
+    </button>
+    <div class="warning-msg" id="warning-msg">⚠️ Please answer all questions before submitting.</div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Final JavaScript Exam – TOFAS &nbsp;|&nbsp; <span>Eng. Ahmed Shawky</span> &nbsp;|&nbsp; ICT, Programming & AI</p>
+</footer>
+
+<script>
+/* ===========================
+   EXAM DATA
+=========================== */
+const ANSWER_KEY = {
+  1:'B', 2:'A', 3:'C', 4:'A', 5:'D',
+  6:'B', 7:'D', 8:'D', 9:'A', 10:'C',
+  11:'D', 12:'B', 13:'A', 14:'B', 15:'B',
+  16:'D', 17:'A', 18:'A', 19:'A', 20:'D',
+  21:'A', 22:'A', 23:'C', 24:'D', 25:'A'
+};
+
+const QUESTIONS = [
+  {
+    id:1,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("We couldn't confirm a reservation for Mr. Sakamoto.");
+console.log("Please wait until we call you.");`,
+    options:{
+      A:`let clientName = "Mr. Sakamoto";\nlet reservationName = "Mr. Abe";\nif (clientName = = reservationName) {\n  console.log("We couldn't confirm a reservation for " + clientName);\n  console.log("Please wait until we call you.");\n} else {\n  console.log("Thank you for your reservation, " + clientName);\n  console.log("Please come in.");\n}`,
+      B:`let clientName = "Mr. Sakamoto";\nlet reservationName = "Mr. Abe";\nif (clientName != reservationName) {\n  console.log("We couldn't confirm a reservation for " + clientName);\n  console.log("Please wait until we call you.");\n} else {\n  console.log("Thank you for your reservation, " + clientName);\n  console.log("Please come in.");\n}`,
+      C:`let clientName = "Mr. Sakamoto";\nlet reservationName = "Mr. Abe";\nif (clientName = = reservationName) {\n  console.log("We couldn't confirm a reservation for " + clientName);\n  console.log("Please wait until we call you.");\n  console.log("Thank you for your reservation, " + clientName);\n  console.log("Please come in.");\n}`,
+      D:`let clientName = "Mr. Sakamoto";\nlet reservationName = "Mr. Abe";\nif (clientName != reservationName) {\n  console.log("We couldn't confirm a reservation for " + clientName);\n  console.log("Please wait until we call you.");\n} else {\n  console.log("Thank you for your reservation, " + clientName);\n}`
+    }
+  },
+  {
+    id:2,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Could you please move to your assigned seat?");
+console.log("Your reserved seat is in Car No. 1.");`,
+    options:{
+      A:`let reservedSeat = 15;\nlet seatNumber = 6;\nif (reservedSeat != seatNumber) {\n  console.log("Could you please move to your assigned seat?");\n  if ((reservedSeat > 10) || (reservedSeat <= 30)) {\n    console.log("Your reserved seat is in Car No. 1.");\n  }\n}`,
+      B:`let reservedSeat = 15;\nlet seatNumber = 6;\nif (reservedSeat != seatNumber) {\n  console.log("Could you please move to your assigned seat?");\n  if ((reservedSeat > 10) || (reservedSeat < 30)) {\n    console.log("Your reserved seat is in Car No. 1.");\n  }\n}`,
+      C:`let reservedSeat = 15;\nlet seatNumber = 6;\nif (reservedSeat != seatNumber) {\n  console.log("Could you please move to your assigned seat?");\n  if ((reservedSeat > 10) && (reservedSeat <= 30)) {\n    console.log("Your reserved seat is in Car No. 1.");\n  }\n}`,
+      D:`let reservedSeat = 15;\nlet seatNumber = 6;\nif (reservedSeat = = seatNumber) {\n  console.log("Could you please move to your assigned seat?");\n  if ((reservedSeat > 10) && (reservedSeat <= 30)) {\n    console.log("Your reserved seat is in Car No. 1.");\n  }\n}`
+    }
+  },
+  {
+    id:3,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Shinkansen is a vehicle that travels on land.");
+console.log("Shinkansen can carry many people at once.");
+console.log("Car is a vehicle that travels on land.");
+console.log("Airplane can carry many people at once.");`,
+    options:{
+      A:`let vehicles = ["Shinkansen", "Car", "Airplane"];\nfor (let i = 0; i < 3; i++) {\n  if (i != 2) {\n    console.log(vehicles[i] + " is a vehicle that travels on land.");\n  }\n  if ((i = = 0) || (i = = 2)) {\n    console.log(vehicles[i] + " can carry many people at once.");\n  }\n}`,
+      B:`let vehicles = ["Shinkansen", "Car", "Airplane"];\nfor (let i = 0; i < 3; i++) {\n  if (i != 2) {\n    console.log(vehicles[i] + " is a vehicle that travels on land.");\n  }\n  if ((i = = 0) && (i = = 2)) {\n    console.log(vehicles[i] + " can carry many people at once.");\n  }\n}`,
+      C:`let vehicles = ["Shinkansen", "Car", "Airplane"];\nfor (let i = 0; i < 3; i++) {\n  if (i = = 2) {\n    console.log(vehicles[i] + " is a vehicle that travels on land.");\n  }\n  if ((i = = 0) || (i = = 2)) {\n    console.log(vehicles[i] + " can carry many people at once.");\n  }\n}`,
+      D:`let vehicles = ["Shinkansen", "Car", "Airplane"];\nfor (let i = 0; i < 3; i++) {\n  if (i = = 2) {\n    console.log(vehicles[i] + " is a vehicle that travels on land.");\n  }\n  if ((i = = 0) && (i = = 2)) {\n    console.log(vehicles[i] + " can carry many people at once.");\n  }\n}`
+    }
+  },
+  {
+    id:4,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("The fireworks festival will be held.");
+console.log("I will sit in Seat B.");`,
+    options:{
+      A:`let weather = "Sunny";\nlet ticket = "Available";\nlet seat = "B";\nif ((weather = = "Sunny") && (weather = = "Cloudy")) {\n  console.log("The fireworks festival will be held.");\n} else {\n  console.log("The fireworks festival is canceled.");\n}\nif ((ticket = = "Available") || (seat = = "A")) {\n  console.log("I will sit in Seat A.");\n} else {\n  console.log("I will sit in Seat B.");\n}`,
+      B:`let weather = "Sunny";\nlet ticket = "Available";\nlet seat = "B";\nif ((weather = = "Sunny") || (weather = = "Cloudy")) {\n  console.log("The fireworks festival will be held.");\n} else {\n  console.log("The fireworks festival is canceled.");\n}\nif ((ticket = = "Available") && (seat = = "A")) {\n  console.log("I will sit in Seat A.");\n} else {\n  console.log("I will sit in Seat B.");\n}`,
+      C:`let weather = "Sunny";\nlet ticket = "Available";\nlet seat = "B";\nif ((weather = = "Sunny") && (weather = = "Cloudy")) {\n  console.log("The fireworks festival will be held.");\n} else {\n  console.log("The fireworks festival is canceled.");\n}\nif ((ticket = = "Available") && (seat = = "A")) {\n  console.log("I will sit in Seat A.");\n} else {\n  console.log("I will sit in Seat B.");\n}`,
+      D:`let weather = "Sunny";\nlet ticket = "Available";\nlet seat = "B";\nif ((weather = = "Sunny") || (weather = = "Cloudy")) {\n  console.log("The fireworks festival is canceled.");\n} else {\n  console.log("The fireworks festival will be held.");\n}\nif ((ticket = = "Available") && (seat = = "A")) {\n  console.log("I will sit in Seat A.");\n} else {\n  console.log("I will sit in Seat B.");\n}`
+    }
+  },
+  {
+    id:5,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("You will receive a raffle ticket.");
+console.log("The raffle will be held on Friday.");`,
+    options:{
+      A:`let totalPrice = 3500;\nlet purchaseNum = 7;\nlet day = "Tuesday";\nif ((totalPrice > 3000) || (purchaseNum > 8)) {\n  console.log("You will receive a raffle ticket.");\n  if (!(day = = "Friday")) {\n    console.log("The raffle will be held on Friday.");\n  } else {\n    console.log("You can enter the raffle.");\n  }\n}`,
+      B:`let totalPrice = 3500;\nlet purchaseNum = 7;\nlet day = "Tuesday";\nif ((totalPrice > 3000) || (purchaseNum > 8)) {\n  console.log("You will receive a raffle ticket.");\n  if (day = = "Friday") {\n    console.log("The raffle will be held on Friday.");\n  } else {\n    console.log("You can enter the raffle.");\n  }\n}`,
+      C:`let totalPrice = 3500;\nlet purchaseNum = 7;\nlet day = "Tuesday";\nif ((totalPrice > 3000) && (purchaseNum > 8)) {\n  console.log("You will receive a raffle ticket.");\n  if (day = = "Friday") {\n    console.log("The raffle will be held on Friday.");\n  } else {\n    console.log("You can enter the raffle.");\n  }\n}`,
+      D:`let totalPrice = 3500;\nlet purchaseNum = 7;\nlet day = "Tuesday";\nif ((totalPrice > 3000) && (purchaseNum > 8)) {\n  console.log("You will receive a raffle ticket.");\n  if (!(day = = "Friday")) {\n    console.log("The raffle will be held on Friday.");\n  } else {\n    console.log("You can enter the raffle.");\n  }\n}`
+    }
+  },
+  {
+    id:6,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("I will buy a ballpoint pen.");
+console.log("I will buy a pencil.");
+console.log("I will buy an eraser.");`,
+    options:{
+      A:`let stationeryList = ["a ballpoint pen", "a pencil", "an eraser"];\nfor (let i = 0; i < 3; i++) {\n  console.log("I will buy " + stationeryList[i] + ".");\n}`,
+      B:`let stationeryList = ["a ballpoint pen", "a pencil", "an eraser"];\nfor (let i = 0; i < 3; i++) {\n  console.log("I will buy " + stationeryList[1] + ".");\n}`,
+      C:`let stationeryList = ["a ballpoint pen", "a pencil", "an eraser"];\nif (let i = 0; i < 3; i++) {\n  console.log("I will buy " + stationeryList[1] + ".");\n}`,
+      D:`let stationeryList = ["a ballpoint pen", "a pencil", "an eraser"];\nif (let i = 0; i < 3; i++) {\n  console.log("I will buy " + stationeryList[i] + ".");\n}`
+    }
+  },
+  {
+    id:7,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("The bear lives on land.");
+console.log("The giraffe lives on land.");`,
+    options:{
+      A:`let animals = ["shark", "bear", "giraffe"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] != "shark") {\n    console.log("The " + animals[i] + " lives on land.");\n  }\n}`,
+      B:`let animals = ["shark", "bear", "giraffe"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] = = "shark") {\n    console.log("The " + animals[i] + " lives on land.");\n  }\n}`,
+      C:`let animals = ["shark", "bear", "giraffe"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] != "shark") {\n    console.log("The " + animals + " lives on land.");\n  }\n}`,
+      D:`let animals = ["shark", "bear", "giraffe"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] = = "shark") {\n    console.log("The " + animals + " lives on land.");\n  }\n}`
+    }
+  },
+  {
+    id:8,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Regular rate applies.");`,
+    options:{
+      A:`let weightList = [400, 200, 100, 200];\nlet totalWeight = 0;\nlet luggageNum = weightList.length;\nif (let i = 0; i < luggageNum; i++) {\n  totalWeight = totalWeight + weightList[i];\n}\nif ((totalWeight < 1000) || (luggageNum < 3)) {\n  console.log("Discounted rate applies.");\n} else {\n  console.log("Regular rate applies.");\n}`,
+      B:`let weightList = [400, 200, 100, 200];\nlet totalWeight = 0;\nlet luggageNum = weightList.length;\nif (let i = 0; i < luggageNum; i++) {\n  totalWeight = totalWeight + weightList[i];\n}\nif ((totalWeight < 1000) && (luggageNum < 3)) {\n  console.log("Discounted rate applies.");\n} else {\n  console.log("Regular rate applies.");\n}`,
+      C:`let weightList = [400, 200, 100, 200];\nlet totalWeight = 0;\nlet luggageNum = weightList.length;\nfor (let i = 0; i < luggageNum; i++) {\n  totalWeight = totalWeight + weightList[i];\n}\nif ((totalWeight < 1000) && (luggageNum < 3)) {\n  console.log("Discounted rate applies.");\n} else {\n  console.log("Regular rate applies.");\n}`,
+      D:`let weightList = [400, 200, 100, 200];\nlet totalWeight = 0;\nlet luggageNum = weightList.length;\nfor (let i = 0; i < luggageNum; i++) {\n  totalWeight = totalWeight + weightList[i];\n}\nif ((totalWeight < 1000) || (luggageNum < 3)) {\n  console.log("Discounted rate applies.");\n} else {\n  console.log("Regular rate applies.");\n}`
+    }
+  },
+  {
+    id:9,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("I have a dog.");
+console.log("I have a cat.");`,
+    options:{
+      A:`let animals = ["dog", "cat", "panda"];\nlet animal;\nfor (let i = 0; i < 3; i++) {\n  animal = animals[i];\n  if ((animal = = "dog") || (animal = = "cat")) {\n    console.log("I have a " + animal + ".");\n  }\n}`,
+      B:`let animals = ["dog", "cat", "panda"];\nlet animal;\nfor (let i = 0; i < 3; i++) {\n  animal = animals[i];\n  if ((animal = = "dog") = = (animal = = "cat")) {\n    console.log("I have a " + animal + ".");\n  }\n}`,
+      C:`let animals = ["dog", "cat", "panda"];\nlet animal;\nelse (let i = 0; i < 3; i++) {\n  animal = animals[i];\n  if ((animal = = "dog") = = (animal = = "cat")) {\n    console.log("I have a " + animal + ".");\n  }\n}`,
+      D:`let animals = ["dog", "cat", "panda"];\nlet animal;\nelse (let i = 0; i < 3; i++) {\n  animal = animals[i];\n  if ((animal = = "dog") || (animal = = "cat")) {\n    console.log("I have a " + animal + ".");\n  }\n}`
+    }
+  },
+  {
+    id:10,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Dogs are my favorite animal.");
+console.log("Cats are my favorite animal.");
+console.log("Tigers are scary.");`,
+    options:{
+      A:`let animals = ["Dogs", "Cats", "Tigers"];\nfor (let i = 0; i < 3; i++) {\n  if (!(animals[i] = = "Tigers")) {\n    console.log(animals[i] + " are my favorite animal.");\n  } else {\n    console.log(animals[i] + " are scary.");\n  }\n}`,
+      B:`let animals = ["Dogs", "Cats", "Tigers"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] = = "Tigers") {\n    console.log(animals[i] + " are my favorite animal.");\n  } else {\n    console.log(animals[i] + " are scary.");\n  }\n}`,
+      C:`let animals = ["Dogs", "Cats", "Tigers"];\nfor (let i = 0; i < 3; i++) {\n  if (!(animals[i] = = "Tigers")) {\n    console.log(animals + " are my favorite animal.");\n  } else {\n    console.log(animals + " are scary.");\n  }\n}`,
+      D:`let animals = ["Dogs", "Cats", "Tigers"];\nfor (let i = 0; i < 3; i++) {\n  if (animals[i] = = "Tigers") {\n    console.log(animals[i] + " are my favorite animal.");\n  } else {\n    console.log(animals[i] + " are scary.");\n  }\n}`
+    }
+  },
+  {
+    id:11,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("soccer is a ball sport.");
+console.log("swimming is not a ball sport.");`,
+    options:{
+      A:`let sports = [["soccer"], ["baseball"], ["swimming"]];\nconsole.log("sports[0] is a ball sport.");\nconsole.log("sports[2] is not a ball sport.");`,
+      B:`let sports = [["soccer"], ["baseball"], ["swimming"]];\nconsole.log(sports[0] + " is a ball sport.");\nconsole.log(sports[2] + " is not a ball sport.");`,
+      C:`let sports = ["soccer", "baseball", "swimming"];\nconsole.log("sports[0] is a ball sport.");\nconsole.log("sports[2] is not a ball sport.");`,
+      D:`let sports = ["soccer", "baseball", "swimming"];\nconsole.log(sports[0] + " is a ball sport.");\nconsole.log(sports[2] + " is not a ball sport.");`
+    }
+  },
+  {
+    id:12,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("I will order Hamburger steak.");
+console.log("I will order soup.");`,
+    options:{
+      A:`let menuList = [["salad"], ["Hamburger steak"], ["pasta"], ["soup"]];\nlet prices = [[400], [700], [900], [500]];\nfor (let i = 0; i < 4; i++) {\n  if ((menuList[i] != "salad") || (prices[i] < 800)) {\n    console.log("I will order " + menuList[i] + ".");\n  }\n}`,
+      B:`let menuList = ["salad", "Hamburger steak", "pasta", "soup"];\nlet prices = [400, 700, 900, 500];\nfor (let i = 0; i < 4; i++) {\n  if ((menuList[i] != "salad") && (prices[i] < 800)) {\n    console.log("I will order " + menuList[i] + ".");\n  }\n}`,
+      C:`let menuList = ["salad", "Hamburger steak", "pasta", "soup"];\nlet prices = [400, 700, 900, 500];\nfor (let i = 0; i < 4; i++) {\n  if ((menuList[i] != "salad") || (prices[i] < 800)) {\n    console.log("I will order " + menuList[i] + ".");\n  }\n}`,
+      D:`let menuList = [["salad"], ["Hamburger steak"], ["pasta"], ["soup"]];\nlet prices = [[400], [700], [900], [500]];\nfor (let i = 0; i < 4; i++) {\n  if ((menuList[i] != "salad") && (prices[i] < 800)) {\n    console.log("I will order " + menuList[i] + ".");\n  }\n}`
+    }
+  },
+  {
+    id:13,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("The math test will be held in the morning.");
+console.log("The English test will be held in the afternoon.");
+console.log("The Japanese test will be held in the morning.");
+console.log("The science test will be held in the afternoon.");`,
+    options:{
+      A:`let testSubjectList = ["math", "English", "Japanese", "science"];\nfor (let i = 0; i < 4; i++) {\n  if ((i = = 0) || (i = = 2)) {\n    console.log("The " + testSubjectList[i] + " test will be held in the morning.");\n  } else {\n    console.log("The " + testSubjectList[i] + " test will be held in the afternoon.");\n  }\n}`,
+      B:`let testSubjectList = ["math", "English", "Japanese", "science"];\nfor (let i = 0; i < 4; i++) {\n  if ((i = = 0) && (i = = 2)) {\n    console.log("The " + testSubjectList[i] + " test will be held in the morning.");\n  } else {\n    console.log("The " + testSubjectList[i] + " test will be held in the afternoon.");\n  }\n}`,
+      C:`let testSubjectList = ["math", "English", "Japanese", "science"];\nif ((i = = 0) || (i = = 2)) {\n  console.log("The " + testSubjectList[i] + " test will be held in the morning.");\n} else {\n  console.log("The " + testSubjectList[i] + " test will be held in the afternoon.");\n}`,
+      D:`let testSubjectList = ["math", "English", "Japanese", "science"];\nfor (let i = 0; i > 4; i++) {\n  if ((i = = 0) || (i = = 2)) {\n    console.log("The " + testSubjectList[i] + " test will be held in the morning.");\n  }\n}`
+    }
+  },
+  {
+    id:14,
+    en:"Select the program that outputs:",
+    ar:"اختر البرنامج الذي يُخرج:",
+    output:`console.log("Within budget.");`,
+    options:{
+      A:`let prices = [100, 300, 500];\nlet budget = 1000;\nlet totalPrice = 0;\nfor (let i = 0; i < 3; i++) {\n  totalPrice = totalPrice + prices[i];\n}\nif (!(budget < totalPrice)) {\n  console.log("Within budget.");\n}`,
+      B:`let prices = [100, 300, 500];\nlet budget = 1000;\nlet totalPrice = 0;\nfor (let i = 0; i < 3; i++) {\n  totalPrice = totalPrice + prices[i];\n  if (!(budget < totalPrice)) {\n    console.log("Within budget.");\n  }\n}`,
+      C:`let prices = [100, 300, 500];\nlet budget = 1000;\nlet totalPrice = 0;\nfor (let i = 0; i < 3; i++) {\n  totalPrice = totalPrice + prices[i];\n}\nif (budget < totalPrice) {\n  console.log("Within budget.");\n}`,
+      D:`let prices = [100], [300], [500];\nlet budget = 1000;\nlet totalPrice = 0;\nfor (let i = 0; i < 3; i++) {\n  totalPrice = totalPrice + prices[i];\n}\nif (!(budget < totalPrice)) {\n  console.log("Within budget.");\n}`
+    }
+  },
+  {
+    id:15,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Miku likes melons");`,
+    options:{
+      A:`let fruits = ["apples", "melons", "bananas"];\nconsole.log("Miku likes " * fruits[1]);`,
+      B:`let fruits = ["apples", "melons", "bananas"];\nconsole.log("Miku likes " + fruits[1]);`,
+      C:`let fruits = ["apples", "melons", "bananas"];\nconsole.log("Miku likes " * fruits);`,
+      D:`let fruits = ["apples", "melons", "bananas"];\nconsole.log("Miku likes " + fruits);`
+    }
+  },
+  {
+    id:16,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("You can also buy S size in-store.");
+console.log("You can also buy M size in-store.");
+console.log("You can also buy L size in-store.");
+console.log("You can also buy XL size in-store.");
+console.log("XXL size is only available online.");`,
+    options:{
+      A:`let sizeLineup = ["S", "M", "L", "XL", "XXL"];\nfor (let i = 0; i < 5; i++) {\n  if (sizeLineup[i] != "XXL") {\n    console.log("You can also buy " + sizeLineup[i] + " size in-store.");\n  } else {\n    console.log(sizeLineup[i] + " size is only available online.");\n  }\n}`,
+      B:`let sizeLineup = ["S", "M", "L", "XL", "XXL"];\nfor (let i = 0) {\n  if (sizeLineup[i] != "XXL") {\n    console.log("You can also buy " + sizeLineup[i] + " size in-store.");\n  } else {\n    console.log(sizeLineup[i] + " size is only available online.");\n  }\n}`,
+      C:`let sizeLineup = ["S", "M", "L", "XL", "XXL"];\nfor (let i = 0; i < 5; i++) {\n  if (sizeLineup[i] != "XXL") {\n    console.log("You can also buy " + sizeLineup[i] + " size in-store.");\n  else {\n    console.log(sizeLineup[i] + " size is only available online.");\n  }\n}`,
+      D:`let sizeLineup = ["S", "M", "L", "XL", "XXL"];\nfor (let i = 0; i < 5; i++) {\n  if (sizeLineup[i] = = "XXL") {\n    console.log("You can also buy " + sizeLineup[i] + " size in-store.");\n  } else {\n    console.log(sizeLineup[i] + " size is only available online.");\n  }\n}`
+    }
+  },
+  {
+    id:17,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("France is one of the countries in Europe.");
+console.log("Portugal is one of the countries in Europe.");`,
+    options:{
+      A:`let countries = ["France", "Argentina", "Vietnam", "Portugal"];\nfor (let i = 0; i < 4; i++) {\n  if ((countries[i] = = "France") || (countries[i] = = "Portugal")) {\n    console.log(countries[i] + " is one of the countries in Europe.");\n  }\n}`,
+      B:`let countries = ["France", "Argentina", "Vietnam", "Portugal"];\nfor (let i = 0; i < 4; i++) {\n  if ((countries[i] = = "France") && (countries[i] = = "Portugal")) {\n    console.log(countries[i] + " is one of the countries in Europe.");\n  }\n}`,
+      C:`let countries = [["France"], ["Argentina"], ["Vietnam"], ["Portugal"]];\nfor (let i = 0; i < 4; i++) {\n  if ((countries[i] = = "France") || (countries[i] = = "Portugal")) {\n    console.log(countries[i] + " is one of the countries in Europe.");\n  }\n}`,
+      D:`let countries = ["France", "Argentina". "Vietnam", "Portugal"];\nfor (let i = 0; i < 4; i++) {\n  if ((countries[i] = = "France") && (countries[i] = = "Portugal")) {\n    console.log(countries[i] + " is one of the countries in Europe.");\n  }\n}`
+    }
+  },
+  {
+    id:18,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("There is science homework.");
+console.log("There is social studies homework.");`,
+    options:{
+      A:`let subjects = ["science", "social studies", "English"];\nfor (let i = 0; i < 3; i++) {\n  if (!(subjects[i] = = "English")) {\n    console.log("There is " + subjects[i] + " homework.");\n  }\n}`,
+      B:`let subjects = ["science", "social studies", "English"];\nfor (let i = 0; i < 3; i++) {\n  if (subjects[i] = = "English") {\n    console.log("There is " + subjects[i] + " homework.");\n  }\n}`,
+      C:`let subjects = ["science", "social studies", "English"];\nfor (let i = 0; i < 3; i++) {\n  if (subjects = = "English") {\n    console.log("There is " + subjects + " homework.");\n  }\n}`,
+      D:`let subjects = ["science", "social studies", "English"];\nfor (let i = 0; i < 3; i++) {\n  if (!(subjects = = "English")) {\n    console.log("There is " + subjects + " homework.");\n  }\n}`
+    }
+  },
+  {
+    id:19,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Output natural numbers.");
+console.log(3);
+console.log(1);`,
+    options:{
+      A:`let numbers = [3, -7, 0, 1];\nconsole.log("Output natural numbers.");\nfor (let i = 0; i < 4; i++) {\n  if (numbers[i] > 0) {\n    console.log(numbers[i]);\n  }\n}`,
+      B:`let numbers = [3, -7, 0, 1];\nconsole.log("Output natural numbers.");\nif (let i = 0; i < 4; i++) {\n  if (numbers[i] > 0) {\n    console.log(numbers[i]);\n  }\n}`,
+      C:`let numbers = [3, -7, 0, 1];\nconsole.log("Output natural numbers.");\nif (let i = 0; i < 4; i++) {\n  if (numbers > 0) {\n    console.log(numbers);\n  }\n}`,
+      D:`let numbers = [3, -7, 0, 1];\nconsole.log("Output natural numbers.");\nfor (let i = 0; i < 4; i++) {\n  if (numbers > 0) {\n    console.log(numbers);\n  }\n}`
+    }
+  },
+  {
+    id:20,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Highest math test score so far: ");
+console.log(90);`,
+    options:{
+      A:`let subject = "math";\nlet scores = [75, 80, 70, 90, 60];\nlet highestScore = 0;\nfor (let i = 0; i < scores.length; i++) {\n  if (highestScore < scores[i]) {\n    highestScore = scores[i];\n  }\n}\nconsole.log("Highest " + subject + " test score so far: ");\nconsole.log(highestScore);`,
+      B:`let subject = "math";\nlet scores = [75, 80, 70, 90, 60];\nlet highestScore = 0;\nfor (let i = 0; i < scores.length; i++) {\n  if (highestScore < scores[i]) {\n    highestScore = scores[1];\n  }\n}\nconsole.log("Highest " + subject + " test score so far: ");\nconsole.log(highestScore);`,
+      C:`let subject = "math";\nlet scores = [75, 80, 70, 90, 60];\nlet highestScore = 0;\nfor (let i = 0; i < scores; i++) {\n  if (highestScore < scores[i]) {\n    highestScore = scores[i];\n  }\n}\nconsole.log("Highest " + subject + " test score so far: ");\nconsole.log(highestScore);`,
+      D:`let subject = "math";\nlet scores = [75, 80, 70, 90, 60];\nlet highestScore = 0;\nfor (let i = 0; i < scores.length; i++) {\n  if (highestScore > scores[i]) {\n    highestScore = scores[i];\n  }\n}\nconsole.log("Highest " + subject + " test score so far: ");\nconsole.log(highestScore);`
+    }
+  },
+  {
+    id:21,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Ready to launch.");`,
+    options:{
+      A:`let systemsGo = true;\nlet fuelLevel = 100;\nif (systemsGo = = true && fuelLevel = = 100) {\n  console.log("Ready to launch.");\n}`,
+      B:`let systemsGo = true;\nlet fuelLevel = 100;\nif (systemsGo = = false || fuelLevel < 100) {\n  console.log("Ready to launch.");\n}`,
+      C:`let systemsGo = true;\nlet fuelLevel = 100;\nif (systemsGo != true && fuelLevel = = 100) {\n  console.log("Ready to launch.");\n}`,
+      D:`let systemsGo = true;\nlet fuelLevel = 100;\nif (systemsGo = = true && fuelLevel != 100) {\n  console.log("Ready to launch.");\n}`
+    }
+  },
+  {
+    id:22,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Welcome, Admin.");`,
+    options:{
+      A:`let role = "Admin";\nif (role = = "Guest") {\n  console.log("Welcome, Guest.");\n} else if (role = = "Admin") {\n  console.log("Welcome, Admin.");\n}`,
+      B:`let role = "Admin";\nif (role = = "Guest") {\n  console.log("Welcome, Guest.");\n} else if (role != "Admin") {\n  console.log("Welcome, Admin.");\n}`,
+      C:`let role = "Guest";\nif (role = = "Guest") {\n  console.log("Welcome, Admin.");\n} else if (role = = "Admin") {\n  console.log("Welcome, Admin.");\n}`,
+      D:`let role = "Admin";\nif (role = = "Guest") {\n  console.log("Welcome, Guest.");\n} else if (role = = "Admin") {\n  console.log("Welcome, User.");\n}`
+    }
+  },
+  {
+    id:23,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("I will use soy sauce.");
+console.log("I will use miso.");`,
+    options:{
+      A:`let spices = ["soy sauce", "miso", "sugar"];\nfor (let i = 0; i < spices.length; i++) {\n  if (i != 2) {\n    console.log("I will use " + spices[i] + ".");\n  }\n}`,
+      B:`let spices = ["soy sauce", "miso", "sugar"];\nfor (let i = 0; i < spices.length; i++) {\n  if (i = = 2) {\n    console.log("I will use " + spices[i] + ".");\n  }\n}`,
+      C:`let spices = ["soy sauce", "miso", "sugar"];\nfor (let i = 0; i < spices.length; i++) {\n  if (!(i = = 2)) {\n    console.log("I will use " + spices[1] + ".");\n  }\n}`,
+      D:`let spices = ["soy sauce", "miso", "sugar"];\nfor (let i = 0; i < spices; i++) {\n  if (!(i = = 2)) {\n    console.log("I will use " + spices[i] + ".");\n  }\n}`
+    }
+  },
+  {
+    id:24,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("We will announce the winners.");
+console.log("Yuka");
+console.log("Sana");
+console.log("Airi");`,
+    options:{
+      A:`let winnerList = [["Yuka"], ["Sana"], ["Airi"]];\nconsole.log("We will announce the winners.");\nfor (let i = 0; i < winnerList.length; i++) {\n  console.log(winnerList[i]);\n}`,
+      B:`let winnerList = ["Yuka", "Sana", "Airi"];\nconsole.log("We will announce the winners.");\nfor (let i = 0; i < winnerList; i++) {\n  console.log(winnerList[i]);\n}`,
+      C:`let winnerList = [["Yuka"], ["Sana"], ["Airi"]];\nconsole.log("We will announce the winners.");\nfor (let i = 0; i < winnerList; i++) {\n  console.log(winnerList[i]);\n}`,
+      D:`let winnerList = ["Yuka", "Sana", "Airi"];\nconsole.log("We will announce the winners.");\nfor (let i = 0; i < winnerList.length; i++) {\n  console.log(winnerList[i]);\n}`
+    }
+  },
+  {
+    id:25,
+    en:"Select the program that outputs the following:",
+    ar:"اختر البرنامج الذي يُخرج ما يلي:",
+    output:`console.log("Apples are a local specialty.");
+console.log("Grapes are a local specialty.");`,
+    options:{
+      A:`let fruits = ["Pears", "Apples", "Grapes"];\nfor (let i = 0; i < fruits.length; i++) {\n  if (i != 0) {\n    console.log(fruits[i] + " are a local specialty.");\n  }\n}`,
+      B:`let fruits = ["Pears", "Apples", "Grapes"];\nfor (let i = 0; i < fruits; i++) {\n  if (i != 0) {\n    console.log(fruits[i] + " are a local specialty.");\n  }\n}`,
+      C:`let fruits = ["Pears", "Apples", "Grapes"];\nfor (let i = 0; i < fruits.length; i++) {\n  if (i = = 0) {\n    console.log(fruits + " are a local specialty.");\n  }\n}`,
+      D:`let fruits = ["Pears", "Apples", "Grapes"];\nfor (let i = 0; i < fruits; i++) {\n  if (i = = 0) {\n    console.log(fruits + " are a local specialty.");\n  }\n}`
+    }
+  }
+];
+
+/* ===========================
+   GOOGLE SHEETS CONFIG
+   Replace the URL below with your own Google Apps Script Web App URL
+=========================== */
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzDHITSR5SDlZdyRNDy_7YEex2-T3i3p4qi91HGzl4_-prPHR5v_vMCCTUN4GBLDRR1/exec';
+
+/* ===========================
+   STATE
+=========================== */
+let currentLang = 'en';
+let submitted = false;
+let answeredCount = 0;
+
+/* ===========================
+   LANGUAGE
+=========================== */
+const T = {
+  en: {
+    siteTitle: 'Final JavaScript Exam – TOFAS',
+    siteSub: 'Eng. Ahmed Shawky | ICT, Programming & AI',
+    infoTitle: '📋 Student Information',
+    examTitle: '📝 JavaScript Exam — 25 Questions',
+    progLabel: n => `Answered: ${n} / 25`,
+    submitText: 'Submit Exam ✓',
+    submitAr: 'Submit Exam ✓',
+    warning: '⚠️ Please answer all 25 questions and fill in all student information before submitting.',
+    resultTitle: '🎉 Your Results',
+    lblCorrect: 'Correct',
+    lblWrong: 'Wrong',
+    lblPct: 'Score %',
+    sheetsLoading: 'Saving your results...',
+    sheetsOk: '✅ Results saved successfully to Google Sheets!',
+    sheetsErr: '⚠️ Could not save to Google Sheets. Please contact your teacher.',
+    gradeLabel: s => s >= 90 ? 'Excellent – A' : s >= 80 ? 'Very Good – B' : s >= 65 ? 'Good – C' : s >= 50 ? 'Pass – D' : 'Fail – F'
+  },
+  ar: {
+    siteTitle: 'الامتحان النهائي للجافاسكريبت – توفاس',
+    siteSub: 'م. أحمد شوقي | ICT والبرمجة والذكاء الاصطناعي',
+    infoTitle: '📋 بيانات الطالب',
+    examTitle: '📝 امتحان JavaScript — 25 سؤال',
+    progLabel: n => `تمت الإجابة: ${n} / 25`,
+    submitText: 'تسليم الامتحان ✓',
+    warning: '⚠️ يرجى الإجابة على جميع الأسئلة الـ 25 وملء بيانات الطالب قبل التسليم.',
+    lblCorrect: 'صحيح',
+    lblWrong: 'خطأ',
+    lblPct: 'النسبة %',
+    sheetsLoading: 'جارٍ حفظ نتيجتك...',
+    sheetsOk: '✅ تم حفظ النتيجة بنجاح في Google Sheets!',
+    sheetsErr: '⚠️ تعذّر الحفظ في Google Sheets. تواصل مع مدرسك.',
+    gradeLabel: s => s >= 90 ? 'ممتاز – A' : s >= 80 ? 'جيد جداً – B' : s >= 65 ? 'جيد – C' : s >= 50 ? 'مقبول – D' : 'راسب – F'
+  }
+};
+
+
+/* ===========================
+   BUILD QUESTIONS
+=========================== */
+function buildQuestions() {
+  const container = document.getElementById('questions-container');
+  QUESTIONS.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${q.id}`;
+
+    const optionsHTML = ['A','B','C','D'].map(letter => {
+      const code = q.options[letter];
+      return `
+        <label class="option-label" id="opt-${q.id}-${letter}">
+          <input type="radio" name="q${q.id}" value="${letter}" onchange="onAnswer(${q.id})">
+          <div class="option-bubble">${letter}</div>
+          <div class="option-text"><pre class="code-option">${escHtml(code)}</pre></div>
+        </label>`;
+    }).join('');
+
+    const outputBlock = q.output
+      ? `<pre class="expected-output">${escHtml(q.output)}</pre>`
+      : '';
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.id}</div>
+        <div class="q-text" data-qid="${q.id}">${q.en}</div>
+      </div>
+      ${outputBlock}
+      <div class="options-list">${optionsHTML}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ===========================
+   PROGRESS
+=========================== */
+function onAnswer(qid) {
+  const card = document.getElementById(`card-${qid}`);
+  if (!card.classList.contains('answered')) {
+    card.classList.add('answered');
+    answeredCount++;
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const pct = (answeredCount / 25) * 100;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = T[currentLang].progLabel(answeredCount);
+}
+
+/* ===========================
+   VALIDATE FORM
+=========================== */
+function validateForm() {
+  let ok = true;
+  const fields = [
+    ['f-name','err-name', v => v.trim().length > 1],
+    ['f-age','err-age', v => v && parseInt(v) >= 10 && parseInt(v) <= 99],
+    ['f-gov','err-gov', v => v.trim() !== ''],
+    ['f-phone','err-phone', v => v.trim().length >= 8],
+    ['f-parent','err-parent', v => v.trim().length >= 8],
+    ['f-lang','err-lang', v => v.trim() !== ''],
+  ];
+  fields.forEach(([fid, eid, validate]) => {
+    const val = document.getElementById(fid).value;
+    const valid = validate(val);
+    document.getElementById(eid).classList.toggle('show', !valid);
+    if (!valid) ok = false;
+  });
+  return ok;
+}
+
+/* ===========================
+   SUBMIT
+=========================== */
+function submitExam() {
+  if (submitted) return;
+
+  const formOk = validateForm();
+  const allAnswered = answeredCount === 25;
+
+  if (!formOk || !allAnswered) {
+    const warn = document.getElementById('warning-msg');
+    warn.textContent = T[currentLang].warning;
+    warn.style.display = 'block';
+    if (!allAnswered) {
+      // Scroll to first unanswered
+      for (let i = 1; i <= 25; i++) {
+        const val = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!val) { document.getElementById(`card-${i}`).scrollIntoView({behavior:'smooth', block:'center'}); break; }
+      }
+    }
+    return;
+  }
+  document.getElementById('warning-msg').style.display = 'none';
+
+  // Gather answers
+  const studentAnswers = {};
+  let score = 0;
+  QUESTIONS.forEach(q => {
+    const sel = document.querySelector(`input[name="q${q.id}"]:checked`);
+    studentAnswers[q.id] = sel ? sel.value : '';
+    if (studentAnswers[q.id] === ANSWER_KEY[q.id]) score++;
+  });
+
+  // Mark answers on cards
+  QUESTIONS.forEach(q => {
+    const correct = ANSWER_KEY[q.id];
+    const student = studentAnswers[q.id];
+    const card = document.getElementById(`card-${q.id}`);
+
+    ['A','B','C','D'].forEach(letter => {
+      const lbl = document.getElementById(`opt-${q.id}-${letter}`);
+      if (letter === correct) lbl.classList.add('correct-answer');
+      else if (letter === student && student !== correct) lbl.classList.add('wrong-answer');
+      // disable
+      const inp = lbl.querySelector('input');
+      if (inp) inp.disabled = true;
+    });
+
+    card.classList.remove('answered');
+    if (student === correct) card.classList.add('correct');
+    else card.classList.add('wrong');
+  });
+
+  // Show results
+  const pct = Math.round((score / 25) * 100);
+  const wrong = 25 - score;
+  const t = T[currentLang];
+  const gradeStr = t.gradeLabel(pct);
+  const gradeClass = pct >= 90 ? 'grade-A' : pct >= 80 ? 'grade-B' : pct >= 65 ? 'grade-C' : pct >= 50 ? 'grade-D' : 'grade-F';
+
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('correct-count').textContent = score;
+  document.getElementById('wrong-count').textContent = wrong;
+  document.getElementById('pct-count').textContent = pct + '%';
+  const badge = document.getElementById('grade-badge');
+  badge.textContent = gradeStr;
+  badge.className = 'grade-badge ' + gradeClass;
+
+  // Animate ring
+  const deg = Math.round((score / 25) * 360);
+  document.getElementById('score-ring').style.background =
+    `conic-gradient(var(--accent) ${deg}deg, var(--border) ${deg}deg)`;
+
+  const panel = document.getElementById('results-panel');
+  panel.style.display = 'block';
+  panel.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Disable submit
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  submitted = true;
+
+  // Send to Google Sheets
+  sendToSheets(score, pct, gradeStr, studentAnswers);
+}
+
+/* ===========================
+   GOOGLE SHEETS SUBMISSION
+=========================== */
+async function sendToSheets(score, pct, grade, studentAnswers) {
+  const status = document.getElementById('sheets-status');
+  status.style.display = 'block';
+  status.className = 'sheets-status loading';
+  status.innerHTML = `<span class="spinner"></span> ${T[currentLang].sheetsLoading}`;
+
+  // Build answers string
+  const answerStr = QUESTIONS.map(q =>
+    `Q${q.id}:${studentAnswers[q.id] || '?'}(${ANSWER_KEY[q.id]})`
+  ).join(', ');
+
+  const payload = {
+    timestamp: new Date().toLocaleString('en-EG', {timeZone:'Africa/Cairo'}),
+    name: document.getElementById('f-name').value.trim(),
+    age: document.getElementById('f-age').value,
+    governorate: document.getElementById('f-gov').value,
+    phone: document.getElementById('f-phone').value.trim(),
+    parentPhone: document.getElementById('f-parent').value.trim(),
+    language: document.getElementById('f-lang').value,
+    score: score,
+    total: 25,
+    percentage: pct + '%',
+    grade: grade,
+    answers: answerStr
+  };
+
+  try {
+    const res = await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    // no-cors means we can't read the response, assume success
+    status.className = 'sheets-status success';
+    status.innerHTML = T[currentLang].sheetsOk;
+  } catch (err) {
+    status.className = 'sheets-status error';
+    status.innerHTML = T[currentLang].sheetsErr;
+    console.error('Sheets error:', err);
+  }
+}
+
+/* ===========================
+   INIT
+=========================== */
+buildQuestions();
+</script>
+
+<!-- 
+===========================================
+  HOW TO CONNECT GOOGLE SHEETS
+===========================================
+
+STEP 1: Open Google Sheets → Extensions → Apps Script
+
+STEP 2: Paste this code:
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  
+  // Add header if first row is empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "Timestamp","Name","Age","Governorate",
+      "Phone","Parent Phone","Language",
+      "Score","Total","Percentage","Grade","Answers"
+    ]);
+  }
+  
+  sheet.appendRow([
+    data.timestamp, data.name, data.age, data.governorate,
+    data.phone, data.parentPhone, data.language,
+    data.score, data.total, data.percentage, data.grade,
+    data.answers
+  ]);
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({status: "ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+STEP 3: Deploy → New Deployment → Web App
+  - Execute as: Me
+  - Who has access: Anyone
+  - Copy the Web App URL
+
+STEP 4: Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'
+        in the SHEETS_URL variable above with your URL.
+===========================================
+-->
+</body>
+</html>
