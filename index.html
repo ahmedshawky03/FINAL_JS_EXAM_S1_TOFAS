@@ -1414,11 +1414,55 @@ async function sendToSheets(score, pct, grade, studentAnswers) {
   }
 }
 
-
+/* ===========================
+   INIT
+=========================== */
 buildQuestions();
 startTimer();
 </script>
 
+<!-- 
+===========================================
+  HOW TO CONNECT GOOGLE SHEETS
+===========================================
 
+STEP 1: Open Google Sheets → Extensions → Apps Script
+
+STEP 2: Paste this code:
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  
+  // Add header if first row is empty
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      "Timestamp","Name","Age","Governorate",
+      "Phone","Parent Phone","Language",
+      "Score","Total","Percentage","Grade","Answers"
+    ]);
+  }
+  
+  sheet.appendRow([
+    data.timestamp, data.name, data.age, data.governorate,
+    data.phone, data.parentPhone, data.language,
+    data.score, data.total, data.percentage, data.grade,
+    data.answers
+  ]);
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({status: "ok"}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+STEP 3: Deploy → New Deployment → Web App
+  - Execute as: Me
+  - Who has access: Anyone
+  - Copy the Web App URL
+
+STEP 4: Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'
+        in the SHEETS_URL variable above with your URL.
+===========================================
+-->
 </body>
 </html>
