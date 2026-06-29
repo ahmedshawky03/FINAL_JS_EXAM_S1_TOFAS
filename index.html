@@ -570,7 +570,7 @@
   <!-- TIMER BAR -->
   <div class="timer-bar" id="timer-bar">
     <span class="timer-icon">⏱️</span>
-    <div class="timer-display" id="timer-display">30:00</div>
+    <div class="timer-display" id="timer-display">60:00</div>
     <span class="timer-label">remaining</span>
   </div>
 
@@ -701,11 +701,11 @@
    EXAM DATA
 =========================== */
 const ANSWER_KEY = {
-  1:'B', 2:'A', 3:'C', 4:'A', 5:'D',
-  6:'B', 7:'D', 8:'D', 9:'A', 10:'C',
-  11:'D', 12:'B', 13:'A', 14:'B', 15:'B',
-  16:'D', 17:'A', 18:'A', 19:'A', 20:'D',
-  21:'A', 22:'A', 23:'C', 24:'D', 25:'A'
+  1:'B', 2:'C', 3:'A', 4:'B', 5:'A',
+  6:'A', 7:'A', 8:'C', 9:'A', 10:'A',
+  11:'D', 12:'B', 13:'A', 14:'A', 15:'B',
+  16:'A', 17:'A', 18:'A', 19:'A', 20:'A',
+  21:'A', 22:'A', 23:'A', 24:'D', 25:'A'
 };
 
 const QUESTIONS = [
@@ -1178,7 +1178,7 @@ function validateForm() {
 /* ===========================
    TIMER
 =========================== */
-const EXAM_MINUTES = 30;
+const EXAM_MINUTES = 60;
 let timerSeconds = EXAM_MINUTES * 60;
 let timerInterval = null;
 
@@ -1421,48 +1421,6 @@ buildQuestions();
 startTimer();
 </script>
 
-<!-- 
-===========================================
-  HOW TO CONNECT GOOGLE SHEETS
-===========================================
 
-STEP 1: Open Google Sheets → Extensions → Apps Script
-
-STEP 2: Paste this code:
-
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  // Add header if first row is empty
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      "Timestamp","Name","Age","Governorate",
-      "Phone","Parent Phone","Language",
-      "Score","Total","Percentage","Grade","Answers"
-    ]);
-  }
-  
-  sheet.appendRow([
-    data.timestamp, data.name, data.age, data.governorate,
-    data.phone, data.parentPhone, data.language,
-    data.score, data.total, data.percentage, data.grade,
-    data.answers
-  ]);
-  
-  return ContentService
-    .createTextOutput(JSON.stringify({status: "ok"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-STEP 3: Deploy → New Deployment → Web App
-  - Execute as: Me
-  - Who has access: Anyone
-  - Copy the Web App URL
-
-STEP 4: Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'
-        in the SHEETS_URL variable above with your URL.
-===========================================
--->
 </body>
 </html>
