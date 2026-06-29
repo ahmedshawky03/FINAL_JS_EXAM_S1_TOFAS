@@ -473,6 +473,49 @@
     .logo-img { height: 36px; }
   }
 
+
+  /* ====== TIMER ====== */
+  .timer-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px 20px;
+  }
+  .timer-icon { font-size: 1.2rem; }
+  .timer-display {
+    font-family: var(--font-code);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    min-width: 90px;
+    text-align: center;
+    transition: color 0.3s;
+  }
+  .timer-display.warn  { color: var(--gold); }
+  .timer-display.danger{ color: var(--red); animation: pulse-timer 0.8s infinite; }
+  @keyframes pulse-timer {
+    0%,100%{ opacity:1; } 50%{ opacity:0.4; }
+  }
+  .timer-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  @keyframes fadeInOverlay {
+    from { opacity:0; } to { opacity:1; }
+  }
+  @keyframes popIn {
+    from { transform:scale(0.7); opacity:0; }
+    to   { transform:scale(1);   opacity:1; }
+  }
+
   /* ====== FOOTER ====== */
   footer {
     text-align: center;
@@ -524,7 +567,14 @@
 
 <div class="container">
 
-  <!-- RESULTS PANEL -->
+  <!-- TIMER BAR -->
+  <div class="timer-bar" id="timer-bar">
+    <span class="timer-icon">⏱️</span>
+    <div class="timer-display" id="timer-display">30:00</div>
+    <span class="timer-label">remaining</span>
+  </div>
+
+    <!-- RESULTS PANEL -->
   <div id="results-panel">
     <div class="score-ring" id="score-ring">
       <div class="score-inner">
@@ -611,9 +661,9 @@
       <div class="form-group">
         <label>Exam Language</label>
         <select id="f-lang">
-          <option value="">— Select / اختر —</option>
-          <option value="English">English</option>
-          
+          <option value="">— Select —</option>
+          <option value="English">English / الإنجليزية</option>
+          <option value="Arabic">Arabic / العربية</option>
         </select>
         <span class="field-error" id="err-lang">Required / مطلوب</span>
       </div>
@@ -1126,30 +1176,136 @@ function validateForm() {
 }
 
 /* ===========================
+   TIMER
+=========================== */
+const EXAM_MINUTES = 30;
+let timerSeconds = EXAM_MINUTES * 60;
+let timerInterval = null;
+
+let tenMinAlertShown = false;
+
+function show10MinAlert() {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'alert-overlay';
+  overlay.style.cssText = `
+    position:fixed; inset:0; z-index:9999;
+    background:rgba(0,0,0,0.72);
+    display:flex; align-items:center; justify-content:center;
+    animation: fadeInOverlay 0.3s ease;
+  `;
+  overlay.innerHTML = `
+    <div style="
+      background:#111827; border:2px solid #f0b429;
+      border-radius:18px; padding:36px 32px; max-width:380px;
+      width:90%; text-align:center; box-shadow:0 0 40px rgba(240,180,41,0.35);
+      animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1);
+    ">
+      <div style="font-size:3rem; margin-bottom:12px;">⏰</div>
+      <h2 style="color:#f0b429; font-size:1.4rem; font-weight:900; margin-bottom:10px;">
+        10 Minutes Remaining!
+      </h2>
+      <p style="color:#b0c4de; font-size:0.95rem; line-height:1.6; margin-bottom:24px;">
+        Only <strong style="color:#f0b429;">10 minutes</strong> left.<br>
+        Please review your answers and submit before time runs out.
+      </p>
+      <button onclick="document.getElementById('alert-overlay').remove()" style="
+        background:#f0b429; color:#0a0e1a; border:none;
+        padding:12px 36px; border-radius:30px; font-size:1rem;
+        font-weight:900; cursor:pointer; font-family:inherit;
+        transition:opacity 0.2s;
+      " onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        Got it — Keep Going!
+      </button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  // Auto-dismiss after 15 seconds
+  setTimeout(() => { overlay.remove(); }, 15000);
+}
+
+function startTimer() {
+  const display = document.getElementById('timer-display');
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    const m = Math.floor(timerSeconds / 60);
+    const s = timerSeconds % 60;
+    display.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    // colour states
+    display.classList.toggle('warn',   timerSeconds <= 600 && timerSeconds > 180);
+    display.classList.toggle('danger', timerSeconds <= 180);
+    // 10-minute alert (fires exactly once)
+    if (timerSeconds === 600 && !tenMinAlertShown) {
+      tenMinAlertShown = true;
+      show10MinAlert();
+    }
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      autoSubmit();
+    }
+  }, 1000);
+}
+
+function autoSubmit() {
+  if (submitted) return;
+  // Show notice
+  const warn = document.getElementById('warning-msg');
+  warn.textContent = '⏰ Time is up! Your exam has been submitted automatically.';
+  warn.style.display = 'block';
+  warn.style.color = 'var(--red)';
+  // Force-submit: blank info fields stay blank (will show errors),
+  // but we force through anyway treating missing answers as 0
+  submitExam(true);
+}
+
+/* ===========================
    SUBMIT
 =========================== */
-function submitExam() {
+function submitExam(isAutoSubmit = false) {
   if (submitted) return;
 
   const formOk = validateForm();
-  const allAnswered = answeredCount === 25;
 
-  if (!formOk || !allAnswered) {
-    const warn = document.getElementById('warning-msg');
-    warn.textContent = T[currentLang].warning;
-    warn.style.display = 'block';
-    if (!allAnswered) {
-      // Scroll to first unanswered
-      for (let i = 1; i <= 25; i++) {
-        const val = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!val) { document.getElementById(`card-${i}`).scrollIntoView({behavior:'smooth', block:'center'}); break; }
+  if (!isAutoSubmit) {
+    // Manual submit: block if form invalid OR unanswered questions
+    const allAnswered = answeredCount === 25;
+    if (!formOk || !allAnswered) {
+      const warn = document.getElementById('warning-msg');
+      warn.textContent = '⚠️ Please fill all required fields and answer all questions.';
+      warn.style.display = 'block';
+      if (!allAnswered) {
+        for (let i = 1; i <= 25; i++) {
+          const val = document.querySelector(`input[name="q${i}"]:checked`);
+          if (!val) {
+            document.getElementById(`card-${i}`).scrollIntoView({behavior:'smooth', block:'center'});
+            break;
+          }
+        }
       }
+      if (!formOk) {
+        document.getElementById('f-name').scrollIntoView({behavior:'smooth', block:'center'});
+      }
+      return;
     }
-    return;
+  } else {
+    // Auto-submit: if form has blank fields, scroll to them and highlight but still submit
+    if (!formOk) {
+      document.querySelector('.info-card').scrollIntoView({behavior:'smooth', block:'start'});
+      // Wait 2 seconds then continue submit anyway
+      setTimeout(() => _doSubmit(), 2000);
+      return;
+    }
   }
-  document.getElementById('warning-msg').style.display = 'none';
 
-  // Gather answers
+  document.getElementById('warning-msg').style.display = 'none';
+  _doSubmit();
+}
+
+function _doSubmit() {
+  if (submitted) return;
+  clearInterval(timerInterval);
+
+  // Gather answers — unanswered questions score 0
   const studentAnswers = {};
   let score = 0;
   QUESTIONS.forEach(q => {
@@ -1202,7 +1358,8 @@ function submitExam() {
   panel.style.display = 'block';
   panel.scrollIntoView({behavior:'smooth', block:'start'});
 
-  // Disable submit
+  // Stop timer, disable submit
+  clearInterval(timerInterval);
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
   submitted = true;
@@ -1257,54 +1414,11 @@ async function sendToSheets(score, pct, grade, studentAnswers) {
   }
 }
 
-/* ===========================
-   INIT
-=========================== */
+
 buildQuestions();
+startTimer();
 </script>
 
-<!-- 
-===========================================
-  HOW TO CONNECT GOOGLE SHEETS
-===========================================
 
-STEP 1: Open Google Sheets → Extensions → Apps Script
-
-STEP 2: Paste this code:
-
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  // Add header if first row is empty
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      "Timestamp","Name","Age","Governorate",
-      "Phone","Parent Phone","Language",
-      "Score","Total","Percentage","Grade","Answers"
-    ]);
-  }
-  
-  sheet.appendRow([
-    data.timestamp, data.name, data.age, data.governorate,
-    data.phone, data.parentPhone, data.language,
-    data.score, data.total, data.percentage, data.grade,
-    data.answers
-  ]);
-  
-  return ContentService
-    .createTextOutput(JSON.stringify({status: "ok"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-STEP 3: Deploy → New Deployment → Web App
-  - Execute as: Me
-  - Who has access: Anyone
-  - Copy the Web App URL
-
-STEP 4: Replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'
-        in the SHEETS_URL variable above with your URL.
-===========================================
--->
 </body>
 </html>
